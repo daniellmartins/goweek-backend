@@ -1,0 +1,14 @@
+scalar DateTime
+
+extend type Query {
+  tweets: [Tweet]!
+}
+
+type Tweet {
+  _id: ID!
+  content: String!
+  likes: Int!
+  author: User!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}

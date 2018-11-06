@@ -7,7 +7,7 @@ type User {
   name: String!
   lastname: String!
   email: String!
-  tweets: [Tweet!]
   createdAt: DateTime
   updatedAt: DateTime
+  tweets: [Tweet!]
 }

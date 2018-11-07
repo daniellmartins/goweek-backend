@@ -5,26 +5,34 @@ export default {
     }
   },
   Mutation: {
-    createTweet: async (_, { input }, { model: { tweet }, userId }) => {
-      return await tweet.create({ ...input, author: userId });
+    createTweet: async (_, { input }, { model, userId, pubSub }) => {
+      const tweet = await model.tweet.create({ ...input, author: userId });
+      await pubSub.publish("TWEET", {
+        tweetSubscription: { mutation: "CREATED", node: tweet }
+      });
+      return tweet;
     },
-    addLikeToTweet: async (_, { tweetId }, { model: { tweet }, userId }) => {
-      return await tweet.findByIdAndUpdate(
+    addLikeToTweet: async (_, { tweetId }, { model, userId, pubSub }) => {
+      const tweet = await model.tweet.findByIdAndUpdate(
         tweetId,
         { $addToSet: { likes: userId } },
         { new: true }
       );
+      await pubSub.publish("TWEET", {
+        tweetSubscription: { mutation: "UPDATED", node: tweet }
+      });
+      return tweet;
     },
-    removeLikeFromTweet: async (
-      _,
-      { tweetId },
-      { model: { tweet }, userId }
-    ) => {
-      return await tweet.findByIdAndUpdate(
+    removeLikeFromTweet: async (_, { tweetId }, { model, userId, pubSub }) => {
+      const tweet = await model.tweet.findByIdAndUpdate(
         tweetId,
         { $pull: { likes: userId } },
         { new: true }
       );
+      await pubSub.publish("TWEET", {
+        tweetSubscription: { mutation: "UPDATED", node: tweet }
+      });
+      return tweet;
     }
   },
   Tweet: {
@@ -36,6 +44,13 @@ export default {
     },
     likesCount: async ({ likes }) => {
       return await likes.length;
+    }
+  },
+  Subscription: {
+    tweetSubscription: {
+      subscribe(_, args, { pubSub }) {
+        return pubSub.asyncIterator("TWEET");
+      }
     }
   }
 };

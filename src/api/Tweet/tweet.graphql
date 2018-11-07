@@ -1,5 +1,11 @@
 scalar DateTime
 
+enum MutationType {
+  CREATED
+  UPDATED
+  DELETED
+}
+
 extend type Query {
   tweets: [Tweet]!
 }
@@ -10,6 +16,10 @@ extend type Mutation {
   removeLikeFromTweet(tweetId: ID!): Tweet
 }
 
+type Subscription {
+  tweetSubscription: TweetSubscription!
+}
+
 type Tweet {
   _id: ID!
   content: String!
@@ -18,6 +28,11 @@ type Tweet {
   author: User!
   likesCount: Int!
   likes: [User!]
+}
+
+type TweetSubscription {
+  mutation: MutationType!
+  node: Tweet
 }
 
 input TweetCreateInput {

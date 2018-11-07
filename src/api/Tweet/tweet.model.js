@@ -8,11 +8,7 @@ const TweetScheam = Schema(
       type: String,
       required: true
     },
-    likes: {
-      type: Number,
-      required: true,
-      default: 0
-    },
+    likes: [Schema.Types.ObjectId],
     author: Schema.Types.ObjectId
   },
   { timestamps: true }

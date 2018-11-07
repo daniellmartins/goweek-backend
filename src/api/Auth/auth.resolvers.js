@@ -5,8 +5,8 @@ import { APP_SECRET } from "../../config";
 
 export default {
   Mutation: {
-    signin: async (_, { input }, { model: { user } }) => {
-      const user = await user.findOne({ email: input.email });
+    signin: async (_, { input }, { model }) => {
+      const user = await model.user.findOne({ email: input.email });
       if (!user) throw new Error("No such a user!");
 
       const matched = await compare(input.password, user.password);

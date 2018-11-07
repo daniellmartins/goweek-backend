@@ -15,6 +15,8 @@ export const permissions = shield({
     tweets: rules.isAuthenticated
   },
   Mutation: {
-    createTweet: rules.isAuthenticated
+    createTweet: rules.isAuthenticated,
+    addLikeToTweet: rules.isAuthenticated,
+    removeLikeFromTweet: rules.isAuthenticated
   }
 });

@@ -1,6 +1,6 @@
 import userModel from "./user.model";
 import userResolvers from "./user.resolvers";
-import { loadGQLFile } from "../../utils/load-gql-file";
+import { loadGQLFile } from "../../utils/loadGQLFile";
 
 export default {
   model: userModel,

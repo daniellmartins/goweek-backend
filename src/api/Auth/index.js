@@ -1,5 +1,5 @@
 import authResolvers from "./auth.resolvers";
-import { loadGQLFile } from "../../utils/load-gql-file";
+import { loadGQLFile } from "../../utils/loadGQLFile";
 
 export default {
   resolvers: authResolvers,

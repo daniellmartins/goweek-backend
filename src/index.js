@@ -1,12 +1,13 @@
 import { GraphQLServer } from "graphql-yoga";
 import mongoose from "mongoose";
 
-import { PORT } from "./config";
+import { PORT, MONGO } from "./config";
+import { middlewares } from "./middlewares";
 import { typeDefs, resolvers, context } from "./api";
 
 mongoose.Promise = global.Promise;
 mongoose.connect(
-  "mongodb://goweek:goweek123@ds013941.mlab.com:13941/goweek-backend",
+  MONGO,
   { useNewUrlParser: true }
 );
 const { ObjectId } = mongoose.Types;
@@ -14,14 +15,12 @@ ObjectId.prototype.valueOf = function() {
   return this.toString();
 };
 
-const opts = {
-  debug: true,
-  port: PORT
-};
+const opts = { debug: true, port: PORT };
 
 const server = new GraphQLServer({
   typeDefs,
   resolvers,
+  middlewares,
   context
 });
 

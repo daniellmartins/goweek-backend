@@ -4,6 +4,10 @@ extend type Query {
   tweets: [Tweet]!
 }
 
+extend type Mutation {
+  createTweet(input: TweetCreateInput!): Tweet!
+}
+
 type Tweet {
   _id: ID!
   content: String!
@@ -11,4 +15,8 @@ type Tweet {
   createdAt: DateTime!
   updatedAt: DateTime!
   author: User!
+}
+
+input TweetCreateInput {
+  content: String!
 }

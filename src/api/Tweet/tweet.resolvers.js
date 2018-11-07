@@ -1,12 +1,17 @@
 export default {
   Query: {
-    async tweets(_, args, ctx) {
-      return await ctx.model.tweet.find();
+    tweets: async (_, args, { model: { tweet } }) => {
+      return await tweet.find();
+    }
+  },
+  Mutation: {
+    createTweet: async (_, { input }, { model: { tweet }, userId }) => {
+      return await tweet.create({ ...input, author: userId });
     }
   },
   Tweet: {
-    async author({ _id }, args, ctx) {
-      return await ctx.model.user.findById(_id);
+    author: async ({ author }, args, { model: { user } }) => {
+      return await user.findById(author);
     }
   }
 };

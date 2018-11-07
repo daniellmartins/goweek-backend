@@ -1,7 +1,12 @@
 export default {
   Query: {
-    async user(_, { _id }, ctx) {
-      return await ctx.model.user.findById(_id);
+    user: async (_, { _id }, { model: { user } }) => {
+      return await user.findById(_id);
+    }
+  },
+  User: {
+    tweets: async ({ _id }, args, { model: { tweet } }) => {
+      return await tweet.find({ author: _id }).sort("-createdAt");
     }
   }
 };

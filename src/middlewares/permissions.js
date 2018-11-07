@@ -13,5 +13,8 @@ const rules = {
 export const permissions = shield({
   Query: {
     tweets: rules.isAuthenticated
+  },
+  Mutation: {
+    createTweet: rules.isAuthenticated
   }
 });

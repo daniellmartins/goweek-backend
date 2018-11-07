@@ -20,8 +20,7 @@ const UserScheam = Schema(
     password: {
       type: String,
       required: true
-    },
-    tweets: [Schema.Types.ObjectId]
+    }
   },
   { timestamps: true }
 );

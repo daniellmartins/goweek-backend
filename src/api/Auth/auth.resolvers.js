@@ -5,8 +5,8 @@ import { APP_SECRET } from "../../config";
 
 export default {
   Mutation: {
-    async signin(_, { input }, ctx) {
-      const user = await ctx.model.user.findOne({ email: input.email });
+    signin: async (_, { input }, { model: { user } }) => {
+      const user = await user.findOne({ email: input.email });
       if (!user) throw new Error("No such a user!");
 
       const matched = await compare(input.password, user.password);
@@ -18,9 +18,9 @@ export default {
 
       return { token, user };
     },
-    async signup(_, { input }, ctx) {
+    signup: async (_, { input }, { model: { user } }) => {
       const encryptedPassword = await hash(input.password, 10);
-      return await ctx.model.user.create({
+      return await user.create({
         ...input,
         password: encryptedPassword
       });

@@ -23,6 +23,7 @@ const isAuthenticated = async (resolve, _, args, ctx, info) => {
 
 export const permissions = {
   Query: {
+    me: isAuthenticated,
     tweets: isAuthenticated
   },
   Mutation: {

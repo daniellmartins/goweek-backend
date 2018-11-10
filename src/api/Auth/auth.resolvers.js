@@ -4,6 +4,12 @@ import { sign } from "jsonwebtoken";
 import { APP_SECRET } from "../../config";
 
 export default {
+  Query: {
+    me: async (_, args, { models: { user }, userId }) => {
+      console.log(userId);
+      return await user.findById(userId);
+    }
+  },
   Mutation: {
     signin: async (_, { input }, { models }) => {
       const user = await models.user.findOne({ email: input.email });

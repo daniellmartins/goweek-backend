@@ -1,7 +1,7 @@
 export default {
   Query: {
     tweets: async (_, args, { models: { tweet } }) => {
-      return await tweet.find();
+      return await tweet.find().sort("-createdAt");
     }
   },
   Mutation: {

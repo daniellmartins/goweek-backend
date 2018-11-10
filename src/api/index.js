@@ -1,26 +1,20 @@
+import { join } from "path";
+import { fileLoader, mergeTypes, mergeResolvers } from "merge-graphql-schemas";
 import { PubSub } from "graphql-yoga";
-import { merge } from "lodash";
-
-import Auth from "./Auth";
-import User from "./User";
-import Tweet from "./Tweet";
 
 const pubSub = new PubSub();
+const models = mergeResolvers(fileLoader(join(__dirname, "./**/*.model.*")));
 
-export const typeDefs = [Auth.typeDefs, User.typeDefs, Tweet.typeDefs].join(
-  " "
+export const typeDefs = mergeTypes(
+  fileLoader(join(__dirname, "./**/*.graphql"))
 );
-export const resolvers = merge(
-  {},
-  Auth.resolvers,
-  User.resolvers,
-  Tweet.resolvers
+
+export const resolvers = mergeResolvers(
+  fileLoader(join(__dirname, "./**/*.resolvers.*"))
 );
+
 export const context = req => ({
   ...req,
-  model: {
-    user: User.model,
-    tweet: Tweet.model
-  },
+  models,
   pubSub
 });

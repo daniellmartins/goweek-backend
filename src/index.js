@@ -1,11 +1,15 @@
 import { GraphQLServer } from "graphql-yoga";
 import "./database";
 
-import { PORT } from "./config";
+import { PORT, DEBUG, PLAYGROUND } from "./config";
 import { middlewares } from "./middlewares";
 import { typeDefs, resolvers, context } from "./api";
 
-const opts = { debug: true, port: PORT };
+const opts = {
+  port: PORT,
+  debug: DEBUG,
+  playground: PLAYGROUND
+};
 
 const server = new GraphQLServer({
   typeDefs,

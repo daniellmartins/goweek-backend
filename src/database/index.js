@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 
-import { MONGO } from "../config";
+import { MONGO_DB } from "../config";
 
 mongoose.Promise = global.Promise;
 mongoose.connect(
-  MONGO,
+  MONGO_DB,
   { useNewUrlParser: true }
 );
 const { ObjectId } = mongoose.Types;

@@ -1,19 +1,19 @@
 export default {
   Query: {
-    tweets: async (_, args, { model: { tweet } }) => {
+    tweets: async (_, args, { models: { tweet } }) => {
       return await tweet.find();
     }
   },
   Mutation: {
-    createTweet: async (_, { input }, { model, userId, pubSub }) => {
-      const tweet = await model.tweet.create({ ...input, author: userId });
+    createTweet: async (_, { input }, { models, userId, pubSub }) => {
+      const tweet = await models.tweet.create({ ...input, author: userId });
       await pubSub.publish("TWEET", {
         tweetSubscription: { mutation: "CREATED", node: tweet }
       });
       return tweet;
     },
-    addLikeToTweet: async (_, { tweetId }, { model, userId, pubSub }) => {
-      const tweet = await model.tweet.findByIdAndUpdate(
+    addLikeToTweet: async (_, { tweetId }, { models, userId, pubSub }) => {
+      const tweet = await models.tweet.findByIdAndUpdate(
         tweetId,
         { $addToSet: { likes: userId } },
         { new: true }
@@ -23,8 +23,8 @@ export default {
       });
       return tweet;
     },
-    removeLikeFromTweet: async (_, { tweetId }, { model, userId, pubSub }) => {
-      const tweet = await model.tweet.findByIdAndUpdate(
+    removeLikeFromTweet: async (_, { tweetId }, { models, userId, pubSub }) => {
+      const tweet = await models.tweet.findByIdAndUpdate(
         tweetId,
         { $pull: { likes: userId } },
         { new: true }
@@ -36,10 +36,10 @@ export default {
     }
   },
   Tweet: {
-    author: async ({ author }, args, { model: { user } }) => {
+    author: async ({ author }, args, { models: { user } }) => {
       return await user.findById(author);
     },
-    likes: async ({ likes }, args, { model: { user } }) => {
+    likes: async ({ likes }, args, { models: { user } }) => {
       return await user.find({ _id: { $in: likes } }).sort("-createdAt");
     },
     likesCount: async ({ likes }) => {

@@ -1,25 +1,36 @@
-import { rule, shield } from "graphql-shield";
+import { verify } from "jsonwebtoken";
 
-import { getUserId } from "../utils/getUserId";
+import { APP_SECRET } from "../config";
 
-const rules = {
-  isAuthenticated: rule()(async (_, args, ctx, info) => {
-    const userId = getUserId(ctx, info);
-    ctx.userId = userId;
-    return !!userId;
-  })
+const isAuthenticated = async (resolve, _, args, ctx, info) => {
+  let authorized;
+  if (info.operation.operation === "subscription") {
+    authorized = ctx.connection.context.Authorization;
+  } else {
+    authorized = ctx.request.get("Authorization");
+  }
+
+  if (!authorized) throw new Error("Not authorized");
+
+  const token = authorized.replace("Bearer ", "");
+  const verifiedToken = verify(token, APP_SECRET);
+  if (!verifiedToken && !verifiedToken.userId)
+    throw new Error("Token is invalid");
+
+  ctx.userId = verifiedToken.userId;
+  return resolve();
 };
 
-export const permissions = shield({
+export const permissions = {
   Query: {
-    tweets: rules.isAuthenticated
+    tweets: isAuthenticated
   },
   Mutation: {
-    createTweet: rules.isAuthenticated,
-    addLikeToTweet: rules.isAuthenticated,
-    removeLikeFromTweet: rules.isAuthenticated
+    createTweet: isAuthenticated,
+    addLikeToTweet: isAuthenticated,
+    removeLikeFromTweet: isAuthenticated
   },
   Subscription: {
-    tweetSubscription: rules.isAuthenticated
+    tweetSubscription: isAuthenticated
   }
-});
+};

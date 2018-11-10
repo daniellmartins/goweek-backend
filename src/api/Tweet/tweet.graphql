@@ -6,11 +6,11 @@ enum MutationType {
   DELETED
 }
 
-extend type Query {
+type Query {
   tweets: [Tweet]!
 }
 
-extend type Mutation {
+type Mutation {
   createTweet(input: TweetCreateInput!): Tweet
   addLikeToTweet(tweetId: ID!): Tweet
   removeLikeFromTweet(tweetId: ID!): Tweet

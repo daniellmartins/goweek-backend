@@ -1,0 +1,14 @@
+type Query {
+  likes(tweetId: ID!): [User]!
+}
+
+type Mutation {
+  addLikeToTweet(tweetId: ID!): Boolean!
+  deleteLikeFromTweet(tweetId: ID!): Boolean!
+}
+
+type Like {
+  _id: ID!
+  tweet: Tweet!
+  user: User!
+}

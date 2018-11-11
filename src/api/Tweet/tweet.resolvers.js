@@ -11,39 +11,17 @@ export default {
         tweetSubscription: { mutation: "CREATED", node: tweet }
       });
       return tweet;
-    },
-    addLikeToTweet: async (_, { tweetId }, { models, userId, pubSub }) => {
-      const tweet = await models.tweet.findByIdAndUpdate(
-        tweetId,
-        { $addToSet: { likes: userId } },
-        { new: true }
-      );
-      await pubSub.publish("TWEET", {
-        tweetSubscription: { mutation: "UPDATED", node: tweet }
-      });
-      return tweet;
-    },
-    removeLikeFromTweet: async (_, { tweetId }, { models, userId, pubSub }) => {
-      const tweet = await models.tweet.findByIdAndUpdate(
-        tweetId,
-        { $pull: { likes: userId } },
-        { new: true }
-      );
-      await pubSub.publish("TWEET", {
-        tweetSubscription: { mutation: "UPDATED", node: tweet }
-      });
-      return tweet;
     }
   },
   Tweet: {
     author: async ({ author }, args, { models: { user } }) => {
       return await user.findById(author);
     },
-    likes: async ({ likes }, args, { models: { user } }) => {
-      return await user.find({ _id: { $in: likes } }).sort("-createdAt");
+    likes: async ({ _id }, args, { models: { like } }) => {
+      return await like.count({ tweetId: _id });
     },
-    likesCount: async ({ likes }) => {
-      return await likes.length;
+    iliked: async ({ _id }, args, { models: { like }, userId }) => {
+      return (await like.findOne({ tweetId: _id, userId })) ? true : false;
     }
   },
   Subscription: {

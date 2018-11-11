@@ -12,27 +12,25 @@ type Query {
 
 type Mutation {
   createTweet(input: TweetCreateInput!): Tweet
-  addLikeToTweet(tweetId: ID!): Tweet
-  removeLikeFromTweet(tweetId: ID!): Tweet
 }
 
 type Subscription {
-  tweetSubscription: TweetSubscription!
+  tweetSubscription: TweetSubscription
 }
 
 type Tweet {
   _id: ID!
   content: String!
+  author: User!
+  likes: Int!
+  iliked: Boolean!
   createdAt: DateTime!
   updatedAt: DateTime!
-  author: User!
-  likesCount: Int!
-  likes: [User!]
 }
 
 type TweetSubscription {
   mutation: MutationType!
-  node: Tweet
+  node: Tweet!
 }
 
 input TweetCreateInput {

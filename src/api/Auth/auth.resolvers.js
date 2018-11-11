@@ -6,7 +6,6 @@ import { APP_SECRET } from "../../config";
 export default {
   Query: {
     me: async (_, args, { models: { user }, userId }) => {
-      console.log(userId);
       return await user.findById(userId);
     }
   },
